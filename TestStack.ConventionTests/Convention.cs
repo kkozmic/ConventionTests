@@ -67,7 +67,7 @@
             {
                 new ConventionReportTraceRenderer(),
                 HtmlRenderer,
-                new ConventionReportTextRenderer()
+                new ConventionResultExceptionReporter()
             }, hasApprovedExceptions: true);
         }
 

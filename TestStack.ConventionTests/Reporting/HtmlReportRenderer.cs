@@ -16,7 +16,7 @@
             file = Path.Combine(assemblyDirectory, "Conventions.htm");
         }
 
-        public void Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
+        public string Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
         {
             var sb = new StringBuilder();
             var html = new HtmlTextWriter(new StringWriter(sb));
@@ -75,6 +75,7 @@
             html.Flush();
 
             File.WriteAllText(file, sb.ToString());
+            return sb.ToString();
         }
 
         string Describe(ConventionResult conventionReport, IConventionFormatContext context)

@@ -1,17 +1,16 @@
 ﻿namespace TestStack.ConventionTests.Reporting
 {
+    using System;
     using System.Collections;
+    using System.Linq;
     using System.Text;
     using TestStack.ConventionTests.Internal;
 
     public class CsvReporter : IConventionReportRenderer
     {
-        public void Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
+        public string Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
         {
-            foreach (var result in conventionResult)
-            {
-                Build(result.Result, context);
-            }
+            return string.Join(Environment.NewLine, conventionResult.Select(result => Build(result.Result, context)));
         }
 
         string Build(IEnumerable results, IConventionFormatContext formatter)

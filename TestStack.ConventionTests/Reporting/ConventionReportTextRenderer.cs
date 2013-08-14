@@ -1,19 +1,17 @@
 ﻿namespace TestStack.ConventionTests.Reporting
 {
-    using System.Linq;
     using System.Text;
     using TestStack.ConventionTests.Internal;
 
     public class ConventionReportTextRenderer : IConventionReportRenderer
     {
-        public void Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
+        public string Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
         {
             var stringBuilder = new StringBuilder();
 
             foreach (var conventionReport in conventionResult)
             {
-                var title = string.Format("{0}: '{1}' for '{2}'",
-                    conventionReport.Result.Any() ? "Failed" : "Success",
+                var title = string.Format("'{0}' for '{1}'",
                     conventionReport.ConventionTitle,
                     conventionReport.DataDescription);
                 stringBuilder.AppendLine(title);
@@ -23,7 +21,6 @@
                 if (conventionReport.HasApprovedExceptions)
                 {
                     stringBuilder.AppendLine("With approved exceptions:");
-                    RenderItems(conventionReport, stringBuilder, context);
                     stringBuilder.AppendLine();
                 }
 
@@ -33,6 +30,7 @@
             }
 
             Output = stringBuilder.ToString().TrimEnd();
+            return Output;
         }
 
         public string Output { get; private set; }
