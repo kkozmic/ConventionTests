@@ -10,9 +10,9 @@ namespace TestStack.ConventionTests.Reporting
             return failingData is ProjectReference;
         }
 
-        public ConventionReportFailure Format(object failingData)
+        public string[] Format(object failingData, IConventionFormatContext context)
         {
-            return new ConventionReportFailure(((ProjectReference)failingData).ReferencedPath);
+            return new[] {((ProjectReference) failingData).ReferencedPath};
         }
     }
 }

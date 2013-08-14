@@ -9,9 +9,9 @@
             return failingData is string;
         }
 
-        public ConventionReportFailure Format(object failingData)
+        public string[] Format(object failingData, IConventionFormatContext context)
         {
-            return new ConventionReportFailure((string)failingData);
+            return new[] {(string) failingData};
         }
     }
 }

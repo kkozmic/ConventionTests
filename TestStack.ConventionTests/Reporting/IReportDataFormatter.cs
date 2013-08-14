@@ -5,6 +5,6 @@
     public interface IReportDataFormatter
     {
         bool CanFormat(object failingData);
-        ConventionReportFailure Format(object failingData);
+        string[] Format(object failingData, IConventionFormatContext context);
     }
 }

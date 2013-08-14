@@ -10,9 +10,9 @@ namespace TestStack.ConventionTests.Reporting
             return failingData is Type;
         }
 
-        public ConventionReportFailure Format(object failingData)
+        public string[] Format(object failingData, IConventionFormatContext context)
         {
-            return new ConventionReportFailure(((Type)failingData).FullName);
+            return new[] {((Type) failingData).FullName};
         }
     }
 }

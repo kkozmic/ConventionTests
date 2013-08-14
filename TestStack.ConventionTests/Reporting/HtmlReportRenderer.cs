@@ -1,6 +1,8 @@
 ﻿namespace TestStack.ConventionTests.Reporting
 {
+    using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Web.UI;
     using TestStack.ConventionTests.Internal;
@@ -14,7 +16,7 @@
             file = Path.Combine(assemblyDirectory, "Conventions.htm");
         }
 
-        public void Render(params ConventionResult[] conventionResult)
+        public void Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
         {
             var sb = new StringBuilder();
             var html = new HtmlTextWriter(new StringWriter(sb));
@@ -34,11 +36,11 @@
                 html.RenderBeginTag(HtmlTextWriterTag.P);
                 html.RenderBeginTag(HtmlTextWriterTag.Div);
                 html.RenderBeginTag(HtmlTextWriterTag.Strong);
-                html.Write(conventionReport.Result+": ");
+                html.Write(conventionReport.Result.Any() ? "Failed:" : "Success:");
                 html.RenderEndTag();
                 var title = string.Format("{0} for {1}", conventionReport.ConventionTitle, conventionReport.DataDescription);
                 html.Write(title);
-                if (!string.IsNullOrEmpty(conventionReport.ApprovedException))
+                if (conventionReport.HasApprovedExceptions)
                 {
                     html.RenderBeginTag(HtmlTextWriterTag.Div);
                     html.RenderBeginTag(HtmlTextWriterTag.Strong);
@@ -49,14 +51,14 @@
                 
                 html.RenderBeginTag(HtmlTextWriterTag.Ul);
 
-                if (!string.IsNullOrEmpty(conventionReport.ApprovedException))
+                if (conventionReport.HasApprovedExceptions)
                 {
                     html.RenderBeginTag(HtmlTextWriterTag.Li);
-                    html.WriteLine(conventionReport.ApprovedException);
+                    html.WriteLine(Describe(conventionReport,context));
                     html.RenderEndTag();
                 }
 
-                foreach (var conventionFailure in conventionReport.ConventionFailures)
+                foreach (var conventionFailure in conventionReport.Result)
                 {
                     html.RenderBeginTag(HtmlTextWriterTag.Li);
                     html.Write(conventionFailure.ToString());
@@ -73,6 +75,16 @@
             html.Flush();
 
             File.WriteAllText(file, sb.ToString());
+        }
+
+        string Describe(ConventionResult conventionReport, IConventionFormatContext context)
+        {
+            return string.Join(Environment.NewLine, conventionReport.Result.Select(i => Describe(i, context)));
+        }
+
+        string Describe(object item, IConventionFormatContext context)
+        {
+            return string.Join(", ", context.Describe(item));
         }
     }
 }

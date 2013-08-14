@@ -2,16 +2,24 @@
 {
     using System.Collections;
     using System.Text;
+    using TestStack.ConventionTests.Internal;
 
-    public class CsvReporter
+    public class CsvReporter : IConventionReportRenderer
     {
-        public string Build(IEnumerable results, string header, DefaultFormatter formatter)
+        public void Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
+        {
+            foreach (var result in conventionResult)
+            {
+                Build(result.Result, context);
+            }
+        }
+
+        string Build(IEnumerable results, IConventionFormatContext formatter)
         {
             var message = new StringBuilder();
-            message.AppendLine(string.Join(",", formatter.DesribeType()));
             foreach (var result in results)
             {
-                message.AppendLine(string.Join(",", formatter.DesribeItem(result)));
+                message.AppendLine(string.Join(",", formatter.Describe(result)));
             }
             return message.ToString();
         }

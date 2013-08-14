@@ -10,11 +10,11 @@ namespace TestStack.ConventionTests.Reporting
             return failingData is MethodInfo;
         }
 
-        public ConventionReportFailure Format(object failingData)
+        public string[] Format(object failingData, IConventionFormatContext context)
         {
-            var methodInfo = (MethodInfo)failingData;
+            var methodInfo = (MethodInfo) failingData;
 
-            return new ConventionReportFailure(methodInfo.DeclaringType + "." + methodInfo.Name);
+            return new[] {methodInfo.DeclaringType + "." + methodInfo.Name};
         }
     }
 }

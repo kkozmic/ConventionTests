@@ -5,11 +5,11 @@
 
     public class ConventionResultExceptionReporter : IConventionReportRenderer
     {
-        public void Render(params ConventionResult[] conventionResult)
+        public void Render(IConventionFormatContext context, params ConventionResult[] conventionResult)
         {
             var conventionReportTextRenderer = new ConventionReportTextRenderer();
-            conventionReportTextRenderer.Render(conventionResult);
-            if (conventionResult.Any(r => r.Result == TestResult.Failed))
+            conventionReportTextRenderer.Render(context, conventionResult);
+            if (conventionResult.Any(r => r.Result.Any()))
             {
                 throw new ConventionFailedException(conventionReportTextRenderer.Output);
             }
